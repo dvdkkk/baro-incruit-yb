@@ -1417,24 +1417,26 @@
 
     .pricing-action-row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 16px;
     }
 
     .btn-pricing-consult {
-      background: #eff6ff;
-      color: var(--primary-blue);
-      border: 1px solid #bfdbfe;
+      background: var(--primary-blue);
+      color: #ffffff;
+      border: 1px solid var(--primary-blue);
       font-size: 1.1em;
       font-weight: 700;
       padding: 16px 0;
       border-radius: 10px;
       text-align: center;
+      box-shadow: 0 6px 16px rgba(0, 102, 255, 0.3);
       transition: all 0.2s;
     }
 
     .btn-pricing-consult:hover {
-      background: #dbeafe;
+      background: var(--primary-dark-blue);
+      transform: translateY(-2px);
     }
 
     .btn-pricing-buy {
@@ -2149,9 +2151,6 @@
           <button type="button" class="btn-hero-primary" onclick="openConsultModal()">
             상담 신청하기
           </button>
-          <button type="button" class="btn-hero-secondary" onclick="FastTrackBuyStart()">
-            결제하기
-          </button>
         </div>
       </div>
     </div>
@@ -2571,10 +2570,7 @@
 
           <div class="pricing-action-row">
             <button type="button" class="btn-pricing-consult" onclick="openConsultModal()">
-              상담하기
-            </button>
-            <button type="button" class="btn-pricing-buy" onclick="FastTrackBuyStart()">
-              구매하기
+              상담신청
             </button>
           </div>
         </div>
@@ -2674,7 +2670,7 @@
         </div>
         <div class="sticky-right">
           <div class="sticky-price">220,000원</div>
-          <button type="button" class="sticky-buy-btn" onclick="FastTrackBuyStart()">구매하기</button>
+          <button type="button" class="sticky-buy-btn" onclick="openConsultModal()">상담신청</button>
         </div>
       </div>
     </div>
@@ -2847,25 +2843,14 @@
       }
     }
 
-    // Modal Control
-    let isConsultSubmitting = false;
-
+    // Consultation Link - opens in new window
     function openConsultModal() {
-      isConsultSubmitting = false;
-      const modal = document.getElementById('consultModal');
-      modal.classList.add('active');
-      const form = document.getElementById('consultForm');
-      if (form) {
-        form.style.display = 'block';
-        const submitBtn = form.querySelector('button[type="submit"]');
-        if (submitBtn) submitBtn.disabled = false;
-      }
-      document.getElementById('consultSuccess').style.display = 'none';
+      window.open('https://naver.me/Fx2z9eQW', '_blank');
     }
 
     function closeConsultModal() {
       const modal = document.getElementById('consultModal');
-      modal.classList.remove('active');
+      if (modal) modal.classList.remove('active');
     }
 
     function handleConsultSubmit(e) {
@@ -3017,6 +3002,27 @@
         toggleText.textContent = '내용보기';
       }
     }
+
+    // Direct all consultation / inquiry CTA buttons to open naver form in new window
+    document.addEventListener('DOMContentLoaded', function() {
+      const consultationKeywords = ['무료상담신청', '상담신청', '상담신청하기', '교육신청하기', '무료교육상담신청하기', '상담하기'];
+      document.querySelectorAll('button, a').forEach(function(el) {
+        if (el.classList.contains('form-submit-btn') || el.classList.contains('faq-header-btn') || el.classList.contains('mobile-menu-btn')) {
+          return;
+        }
+        const text = (el.textContent || '').replace(/\s+/g, '');
+        const matched = consultationKeywords.some(function(keyword) {
+          return text === keyword || text.includes(keyword);
+        });
+        if (matched) {
+          el.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.open('https://naver.me/Fx2z9eQW', '_blank');
+          }, true);
+        }
+      });
+    });
   </script>
 </body>
 </html>
